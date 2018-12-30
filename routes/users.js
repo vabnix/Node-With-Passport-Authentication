@@ -40,7 +40,7 @@ router.post("/register", (req, res) => {
       password2
     });
   } else {
-    //Validation is passed
+    //Validation to check if email exist
     User.findOne({ email: email }).then(user => {
       if (user) {
         errors.push({ msg: "Email already exists" });
@@ -52,6 +52,7 @@ router.post("/register", (req, res) => {
           password2
         });
       } else {
+        //if email doesnt exist then create user object
         const newUser = new User({
           name,
           email,
@@ -80,7 +81,7 @@ router.post("/register", (req, res) => {
   }
 });
 
-// Login
+// Validating Login and redirecting
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/dashboard",
@@ -89,7 +90,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// Logout
+// Logout & redirecting to login screen
 router.get("/logout", (req, res) => {
   req.logout();
   req.flash("success_msg", "You are logged out");
